@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Student Login Portal ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Vivid 4-corner gradient */
+      background:
+        radial-gradient(ellipse at top left,    #ff9de2 0%,  transparent 50%),
+        radial-gradient(ellipse at top right,   #c77dff 0%,  transparent 50%),
+        radial-gradient(ellipse at bottom left, #f72585 0%,  transparent 50%),
+        radial-gradient(ellipse at bottom right,#7b2ff7 0%,  transparent 50%),
+        linear-gradient(135deg, #ffe0f0, #f0d0ff);
+      overflow: hidden;
+      position: relative;
+      padding: 20px;
+    }
+
+    /* ════════════════════════════════
+       BACKGROUND LAYER — all fixed,
+       clearly visible large elements
+    ════════════════════════════════ */
+
+    /* Big slow-spinning ring top-left */
+    .bg-ring1 {
+      position: fixed; top: -80px; left: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 18px solid rgba(255,105,180,0.45);
+      box-shadow: 0 0 40px rgba(255,105,180,0.3);
+      animation: spinRing 18s linear infinite;
+      z-index: 1; pointer-events: none;
+    }
+    /* Big ring bottom-right */
+    .bg-ring2 {
+      position: fixed; bottom: -100px; right: -100px;
+      width: 380px; height: 380px;
+      border-radius: 50%;
+      border: 22px solid rgba(167,90,255,0.40);
+      box-shadow: 0 0 50px rgba(167,90,255,0.25);
+      animation: spinRing 24s linear infinite reverse;
+      z-index: 1; pointer-events: none;
+    }
+    /* Medium ring middle */
+    .bg-ring3 {
+      position: fixed; top: 35%; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 12px solid rgba(255,180,220,0.50);
+      animation: spinRing 14s linear infinite;
+      z-index: 1; pointer-events: none;
+    }
+    .bg-ring4 {
+      position: fixed; bottom: 20%; left: -50px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      border: 10px solid rgba(200,130,255,0.45);
+      animation: spinRing 20s linear infinite reverse;
+      z-index: 1; pointer-events: none;
+    }
+    @keyframes spinRing {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Solid blobs — bright and obvious */
+    .blob {
+      position: fixed; border-radius: 50%;
+      pointer-events: none; z-index: 0;
+      filter: blur(60px);
+    }
+    .blob1 { width:280px; height:280px; background:#ff6eb4; opacity:0.38; top:-80px;  left:-80px;  animation: b1 12s ease-in-out infinite; }
+    .blob2 { width:260px; height:260px; background:#b44fff; opacity:0.35; bottom:-70px; right:-70px; animation: b2 15s ease-in-out infinite; }
+    .blob3 { width:200px; height:200px; background:#ff9de2; opacity:0.40; top:40%;   left:-60px;  animation: b3 10s ease-in-out infinite; }
+    .blob4 { width:180px; height:180px; background:#d084fc; opacity:0.38; bottom:25%; right:-40px; animation: b4 13s ease-in-out infinite; }
+    .blob5 { width:150px; height:150px; background:#ff6eb4; opacity:0.30; top:20%;   right:10%;   animation: b5 9s  ease-in-out infinite; }
+    .blob6 { width:140px; height:140px; background:#c084fc; opacity:0.32; bottom:10%;left:15%;    animation: b6 11s ease-in-out infinite; }
+    @keyframes b1 { 0%,100%{transform:translate(0,0)}   50%{transform:translate(50px,60px)} }
+    @keyframes b2 { 0%,100%{transform:translate(0,0)}   50%{transform:translate(-50px,-50px)} }
+    @keyframes b3 { 0%,100%{transform:translate(0,0)}   50%{transform:translate(60px,-40px)} }
+    @keyframes b4 { 0%,100%{transform:translate(0,0)}   50%{transform:translate(-40px,50px)} }
+    @keyframes b5 { 0%,100%{transform:translate(0,0)}   50%{transform:translate(-30px,40px)} }
+    @keyframes b6 { 0%,100%{transform:translate(0,0)}   50%{transform:translate(40px,-30px)} }
+
+    /* Scattered fixed emoji decorations — big and visible */
+    .deco {
+      position: fixed;
+      pointer-events: none;
+      z-index: 2;
+      font-size: 36px;
+      opacity: 0.75;
+      animation: decoFloat ease-in-out infinite;
+    }
+    .d1  { top:3%;   left:5%;   font-size:42px; animation-duration:5s; animation-delay:0s; }
+    .d2  { top:8%;   right:6%;  font-size:38px; animation-duration:6s; animation-delay:1s; }
+    .d3  { top:18%;  left:3%;   font-size:32px; animation-duration:7s; animation-delay:0.5s; }
+    .d4  { top:25%;  right:4%;  font-size:44px; animation-duration:5.5s; animation-delay:2s; }
+    .d5  { top:40%;  left:2%;   font-size:36px; animation-duration:6.5s; animation-delay:1.5s; }
+    .d6  { top:48%;  right:3%;  font-size:40px; animation-duration:4.5s; animation-delay:0.8s; }
+    .d7  { top:60%;  left:5%;   font-size:34px; animation-duration:7s;   animation-delay:2.5s; }
+    .d8  { top:65%;  right:5%;  font-size:38px; animation-duration:5s;   animation-delay:1.2s; }
+    .d9  { top:75%;  left:3%;   font-size:42px; animation-duration:6s;   animation-delay:0.3s; }
+    .d10 { top:80%;  right:4%;  font-size:36px; animation-duration:5.5s; animation-delay:1.8s; }
+    .d11 { top:88%;  left:8%;   font-size:32px; animation-duration:7.5s; animation-delay:0.6s; }
+    .d12 { top:92%;  right:8%;  font-size:44px; animation-duration:4.8s; animation-delay:2.2s; }
+    .d13 { top:12%;  left:50%;  font-size:30px; animation-duration:6.2s; animation-delay:1s; }
+    .d14 { top:55%;  left:48%;  font-size:34px; animation-duration:5.8s; animation-delay:3s; }
+    .d15 { top:33%;  left:85%;  font-size:38px; animation-duration:6.5s; animation-delay:1.5s; }
+    .d16 { top:70%;  left:88%;  font-size:32px; animation-duration:7.2s; animation-delay:0.9s; }
+
+    @keyframes decoFloat {
+      0%,100% { transform: translateY(0)   rotate(0deg);   }
+      50%      { transform: translateY(-18px) rotate(12deg); }
+    }
+
+    /* Diagonal stripe overlay */
+    .stripes {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(255,105,180,0.06) 0px,
+        rgba(255,105,180,0.06) 2px,
+        transparent 2px,
+        transparent 28px
+      );
+    }
+
+    /* Glitter dots sprinkled around */
+    .glitter {
+      position: fixed; border-radius: 50%; pointer-events: none; z-index: 2;
+      animation: glitterPulse ease-in-out infinite;
+    }
+    @keyframes glitterPulse {
+      0%,100% { transform: scale(1);   opacity: 0.7; }
+      50%      { transform: scale(1.8); opacity: 0.2; }
+    }
+
+    /* ════════════════════════════════
+       CARD
+    ════════════════════════════════ */
+    .card {
+      position: relative; z-index: 10;
+      width: 400px; max-width: 90vw;
+      background: rgba(255,255,255,0.50);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid rgba(255,182,218,0.70);
+      border-radius: 32px;
+      padding: 44px 36px 38px;
+      box-shadow:
+        0 8px 40px rgba(255,110,180,0.20),
+        0 2px 0 rgba(255,255,255,0.85) inset;
+      animation: cardPop 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes cardPop {
+      from { opacity:0; transform:scale(0.88) translateY(28px); }
+      to   { opacity:1; transform:scale(1)    translateY(0); }
+    }
+    .card::before {
+      content:'';
+      position:absolute; top:-2px; left:12%; right:12%; height:3px;
+      border-radius:3px;
+      background:linear-gradient(90deg,transparent,#ff6eb4,#c084fc,#ff6eb4,transparent);
+      box-shadow: 0 0 12px #ff6eb4;
+    }
+
+    .avatar {
+      width:76px; height:76px; border-radius:50%;
+      background:linear-gradient(135deg,#ffb3d9,#c084fc);
+      display:flex; align-items:center; justify-content:center;
+      font-size:34px; margin:0 auto 16px;
+      box-shadow:0 6px 24px rgba(255,110,180,0.40), 0 0 0 4px rgba(255,255,255,0.9);
+      animation: bounce 3s ease-in-out infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+    h1 {
+      font-family:'Playfair Display',serif; font-style:italic; font-weight:700;
+      font-size:26px; color:#5a3460; text-align:center; margin-bottom:4px;
+    }
+    .subtitle { text-align:center; font-size:13px; color:#b07ab8; margin-bottom:24px; font-weight:600; }
+
+    .divider { display:flex; align-items:center; gap:10px; margin-bottom:22px; }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,110,180,0.4),transparent); }
+    .divider span { font-size:16px; }
+
+    .field { margin-bottom:16px; }
+    label { display:block; font-size:11px; font-weight:700; letter-spacing:0.10em; text-transform:uppercase; color:#b07ab8; margin-bottom:7px; }
+
+    .input-wrap { position:relative; }
+    .input-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; z-index:2; }
+
+    input {
+      width:100%; padding:13px 44px 13px 42px;
+      background:rgba(255,240,247,0.80);
+      border:1.5px solid rgba(255,182,218,0.60);
+      border-radius:16px; color:#5a3460;
+      font-family:'Quicksand',sans-serif; font-size:14px; font-weight:600;
+      transition:border-color 0.2s,background 0.2s,box-shadow 0.2s; outline:none;
+    }
+    input::placeholder { color:rgba(176,122,184,0.50); }
+    input:focus { border-color:#ff6eb4; background:rgba(255,255,255,0.95); box-shadow:0 0 0 3px rgba(255,110,180,0.15); }
+    input:disabled { opacity:0.45; cursor:not-allowed; }
+
+    .eye-toggle {
+      position:absolute !important; right:12px !important; top:50% !important;
+      transform:translateY(-50%) !important;
+      width:30px !important; height:30px !important;
+      padding:0 !important; background:transparent !important;
+      border:none !important; box-shadow:none !important; outline:none !important;
+      cursor:pointer !important; font-size:17px !important;
+      display:flex !important; align-items:center !important; justify-content:center !important;
+      z-index:5 !important; opacity:0.55 !important; transition:opacity 0.15s !important;
+    }
+    .eye-toggle:hover { opacity:1 !important; background:rgba(255,110,180,0.08) !important; transform:translateY(-50%) scale(1.15) !important; }
+
+    .attempts-bar { display:flex; align-items:center; gap:8px; margin-bottom:20px; }
+    .attempts-label { font-size:11px; font-weight:700; letter-spacing:0.07em; color:#b07ab8; margin-right:4px; }
+    .dot { width:11px; height:11px; border-radius:50%; transition:all 0.3s; background:rgba(255,110,180,0.18); border:1.5px solid rgba(255,110,180,0.30); }
+    .dot.ok   { background:#f472b6; box-shadow:0 0 8px rgba(244,114,182,0.7); border-color:#f472b6; }
+    .dot.used { background:#a78bfa; box-shadow:0 0 8px rgba(167,139,250,0.7); border-color:#a78bfa; transform:scale(1.3); }
+
+    #loginBtn {
+      width:100%; padding:15px; border:none; border-radius:16px;
+      font-family:'Quicksand',sans-serif; font-size:15px; font-weight:700;
+      cursor:pointer; letter-spacing:0.05em; color:#fff;
+      background:linear-gradient(135deg,#ff6eb4 0%,#c084fc 100%);
+      box-shadow:0 6px 22px rgba(255,110,180,0.50), inset 0 1px 0 rgba(255,255,255,0.25);
+      transition:transform 0.15s,box-shadow 0.2s;
+    }
+    #loginBtn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,110,180,0.60); }
+    #loginBtn:disabled { opacity:0.35; cursor:not-allowed; box-shadow:none; }
+
+    #signoutBtn {
+      display:none; width:100%; padding:13px; margin-top:10px;
+      border:1.5px solid rgba(255,110,180,0.40); border-radius:16px;
+      font-family:'Quicksand',sans-serif; font-size:14px; font-weight:600;
+      cursor:pointer; color:#ff6eb4; background:transparent; transition:background 0.2s,transform 0.15s;
+    }
+    #signoutBtn:hover { background:rgba(255,110,180,0.08); transform:translateY(-1px); }
+
+    #message {
+      margin-top:16px; font-size:13px; font-weight:600;
+      text-align:center; padding:12px 16px; border-radius:14px; transition:all 0.3s;
+    }
+    #message.success { background:rgba(244,114,182,0.12); color:#db2777; border:1.5px solid rgba(244,114,182,0.35); }
+    #message.error   { background:rgba(167,139,250,0.12); color:#7c3aed; border:1.5px solid rgba(167,139,250,0.35); }
+    #message.locked  { background:rgba(251,191,36,0.12);  color:#d97706; border:1.5px solid rgba(251,191,36,0.35); }
+    #message:empty   { padding:0; background:none; border:none; }
+
+    .footer-text { margin-top:20px; text-align:center; font-size:11px; color:rgba(176,122,184,0.60); }
+
+    .shake { animation:shake 0.4s ease; }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)}
+      40%{transform:translateX(7px)}   60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Diagonal stripe -->
+  <div class="stripes"></div>
+
+  <!-- Blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+  <div class="blob blob5"></div>
+  <div class="blob blob6"></div>
+
+  <!-- Spinning rings -->
+  <div class="bg-ring1"></div>
+  <div class="bg-ring2"></div>
+  <div class="bg-ring3"></div>
+  <div class="bg-ring4"></div>
+
+  <!-- Fixed floating deco emojis — always visible on sides -->
+  <div class="deco d1">🌸</div>
+  <div class="deco d2">💖</div>
+  <div class="deco d3">🦋</div>
+  <div class="deco d4">🌺</div>
+  <div class="deco d5">✨</div>
+  <div class="deco d6">💜</div>
+  <div class="deco d7">🌷</div>
+  <div class="deco d8">💫</div>
+  <div class="deco d9">🌼</div>
+  <div class="deco d10">🩷</div>
+  <div class="deco d11">⭐</div>
+  <div class="deco d12">🪷</div>
+  <div class="deco d13">💕</div>
+  <div class="deco d14">🌟</div>
+  <div class="deco d15">🎀</div>
+  <div class="deco d16">💐</div>
+
+  <!-- Card -->
+  <div class="card" id="card">
+    <div class="avatar">🌸</div>
+    <h1>Student Login Portal</h1>
+    <p class="subtitle">Welcome back, bestie ✨</p>
+    <div class="divider"><span>💖</span></div>
+
+    <div class="field">
+      <label for="username">Username</label>
+      <div class="input-wrap">
+        <span class="input-icon">🌷</span>
+        <input type="text" id="username" placeholder="Enter your username" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔑</span>
+        <input type="password" id="password" placeholder="Enter your password">
+        <button class="eye-toggle" type="button" id="eyeBtn" onclick="togglePassword()">👁️</button>
+      </div>
+    </div>
+
+    <div class="attempts-bar">
+      <span class="attempts-label">Attempts</span>
+      <div class="dot ok" id="d1"></div>
+      <div class="dot ok" id="d2"></div>
+      <div class="dot ok" id="d3"></div>
+    </div>
+
+    <button id="loginBtn" onclick="login()">✨ Sign In ✨</button>
+    <button id="signoutBtn" onclick="signout()">👋 Sign Out</button>
+    <div id="message"></div>
+    <p class="footer-text">💕 Student Management System · Secure Access 💕</p>
+  </div>
+
+<script>
+  // Glitter dots
+  for (var i = 0; i < 24; i++) {
+    var g = document.createElement('div');
+    g.className = 'glitter';
+    g.style.left  = (Math.random()*100)+'vw';
+    g.style.top   = (Math.random()*100)+'vh';
+    g.style.width = g.style.height = (4+Math.random()*8)+'px';
+    var colors = ['#ff6eb4','#c084fc','#ffb3d9','#f9a8d4','#d8b4fe'];
+    g.style.background = colors[Math.floor(Math.random()*colors.length)];
+    g.style.animationDuration = (2+Math.random()*4)+'s';
+    g.style.animationDelay = '-'+(Math.random()*4)+'s';
+    document.body.appendChild(g);
+  }
+
+  function togglePassword() {
+    var pwd = document.getElementById('password');
+    var btn = document.getElementById('eyeBtn');
+    pwd.type = pwd.type==='password'?'text':'password';
+    btn.textContent = pwd.type==='password'?'👁️':'🙈';
+  }
+
+  var users = {"marigold":"2003","admin":"1234","student1":"1111","student2":"2222"};
+  var MAX_ATTEMPTS=3, attempts=0, locked=false;
+  var dots=[document.getElementById('d1'),document.getElementById('d2'),document.getElementById('d3')];
+
+  function updateDots(){
+    dots.forEach(function(d,i){d.className='dot';d.classList.add(i<attempts?'used':'ok');});
+  }
+  function setMessage(text,type){
+    var el=document.getElementById('message');el.textContent=text;el.className=type;
+  }
+  function shakeCard(){
+    var c=document.getElementById('card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');
+  }
+  function login(){
+    if(locked)return;
+    var user=document.getElementById('username').value.trim();
+    var pass=document.getElementById('password').value;
+    if(users[user]!==undefined && users[user]===pass){
+      setMessage('💖 Welcome back, '+user+'! You look amazing today!','success');
+      document.getElementById('loginBtn').style.display='none';
+      document.getElementById('signoutBtn').style.display='block';
+    } else {
+      attempts++;updateDots();shakeCard();
+      if(attempts>=MAX_ATTEMPTS){
+        locked=true;
+        document.getElementById('loginBtn').disabled=true;
+        document.getElementById('username').disabled=true;
+        document.getElementById('password').disabled=true;
+        setMessage('🔒 Account Locked! Contact your admin, girly 💅','locked');
+      } else {
+        var r=MAX_ATTEMPTS-attempts;
+        setMessage('💔 Oops! Wrong password! ('+r+' left)','error');
+      }
+    }
+  }
+  function signout(){
+    attempts=0;locked=false;
+    ['username','password'].forEach(function(id){var el=document.getElementById(id);el.value='';el.disabled=false;});
+    document.getElementById('loginBtn').style.display='block';
+    document.getElementById('loginBtn').disabled=false;
+    document.getElementById('signoutBtn').style.display='none';
+    document.getElementById('password').type='password';
+    document.getElementById('eyeBtn').textContent='👁️';
+    setMessage('','');updateDots();
+  }
+  document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!locked)login();});
+</script>
+</body>
+</html>
